@@ -1,7 +1,9 @@
-# Android-TicTacToe-ImageView
-This example covers (very basic):
-- Using ImageView(s) to display images and as controls 
-- Custom layout component, SquareLayout, a subclass to LinearLayout, keeping content inside a square (representing the tic-tac-toe board). NB! activity_main.xml uses fill_parent/wrap_content differenetly in portrait and landscape mode respectively.
-- Load drawables, like style or images, from res/drawables
-- Text to speech 
-- Animation with ValueAnimator
+# Android-NBack-Game
+
+NBackgame is developed for Android in this repository. There are two types of game modes available: voice and visual. In the settings tab, users can customize game settings.
+
+After the game finishes, your scored will be revealed to you as a percentage of how much you got right or wrong.
+
+
+
+
