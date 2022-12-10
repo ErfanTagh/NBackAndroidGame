@@ -4,8 +4,8 @@ NBackgame is developed for Android in this repository. There are two types of ga
 
 After the game finishes, your scored will be revealed to you as a percentage of how much you got right or wrong.
 
-![Screenshot](NBack1.png)
-![Screenshot](NBack2.png)
+![Screenshot1](NBack1.jpg)
+![Screenshot2](NBack2.jpg)
 
 
 
