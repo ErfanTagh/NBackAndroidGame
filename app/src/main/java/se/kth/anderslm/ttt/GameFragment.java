@@ -1,5 +1,6 @@
 package se.kth.anderslm.ttt;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -14,9 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.util.Random;
+import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
+
+import android.speech.tts.TextToSpeech;
+
 
 import se.kth.anderslm.ttt.utils.RunTimer;
 import se.kth.anderslm.ttt.utils.TextToSpeechUtil;
@@ -38,17 +41,20 @@ public class GameFragment extends Fragment {
     private String mParam2;
     private Timer msgTimer;
     private Handler handler;
+    private int btnPressed;
+    private int btnMustBePressed;
+    private static GameFragment instance;
+    public boolean btnShouldBePressed = false;
+    TextToSpeech textToSpeech;
+
     public GameFragment() {
         // Required empty public constructor
     }
-    private TextToSpeechUtil textToSpeechUtil;
 
 
   /*  @Override
     public void onResume() {
         super.onResume();
-
-
 
     } */
     @Override
@@ -75,26 +81,68 @@ public class GameFragment extends Fragment {
         return fragment;
     }
 
+    public static GameFragment getInstance(){
+        return instance;
+
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         handler = new Handler();
+        btnPressed = 0;
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+    public void changeScoreStatus(){
+
+        if(btnShouldBePressed){
+
+            btnPressed++;
+        }
+
+    }
+
+    public void checkClickedBtn(){
+
+        btnMustBePressed += 1;
+
+        btnShouldBePressed = true;
+
+    }
+
+    public void openResultsActivity(){
+
+        Log.e( "btnpresssedes: ", btnPressed+" btn mussed be: " + btnMustBePressed);
+        float f = (float) btnPressed / btnMustBePressed;
+        Intent intent = new Intent(getActivity(), MainActivity2.class).putExtra("userScore", f * 100);
+        startActivity(intent);
+
+    }
+
+
+    public void regenerateBtnShouldBePressed(){
+
+        btnShouldBePressed=false;
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_main, container, false);
+
+        instance = this;
+        btnPressed = 0;
+        btnMustBePressed = 0;
+        btnShouldBePressed=false;
         Button button = (Button) view.findViewById(R.id.startBtn);
         Button soundButton = (Button) view.findViewById(R.id.soundBtn);
-
-
             // well, it would probably be easier (for a larger matrix) to create
             // the views in Java code and then add them to the appropriate layout
             ImageView[] imgViews = new ImageView[9];
@@ -113,18 +161,46 @@ public class GameFragment extends Fragment {
         Log.e("gametypevalue: ", name );
         soundButton.setText(name);
         int nValue = preferences.getInt("nvalue", 1);
+        Log.e( "nValue: ",nValue + "" );
+
+
         int timeEvents = preferences.getInt("timeevents", 3);
         int playNum = preferences.getInt("playnum", 10);
 
-        textToSpeechUtil = new TextToSpeechUtil();
-        textToSpeechUtil.initialize(getActivity());
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+
+                // if No error is found then only it will run
+                if(i!=TextToSpeech.ERROR){
+                    // To Choose language of speech
+                    textToSpeech.setLanguage(Locale.getDefault());
+                }
+            }
+        });
+
+
+        soundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view1) {
+
+                changeScoreStatus();
+
+
+            }
+        });
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               /*  String[] array = getActivity().getResources().getStringArray(R.array.letters); */
                 RunTimer runTimer = new RunTimer();
                 runTimer.startTimer(view.getContext(), timeEvents, playNum, nValue, name);
-              /*  handler.postDelayed(runnable = new Runnable() {
+
+
+
+                /*  handler.postDelayed(runnable = new Runnable() {
                     public void run() {
                         String randomStr = array[new Random().nextInt(array.length)];
                         Log.e("Dila","Erfan");

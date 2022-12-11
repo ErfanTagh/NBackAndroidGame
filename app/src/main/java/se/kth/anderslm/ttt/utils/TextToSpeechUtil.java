@@ -2,6 +2,7 @@ package se.kth.anderslm.ttt.utils;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import java.util.Locale;
 
@@ -13,6 +14,8 @@ public class TextToSpeechUtil {
 
     private TextToSpeech textToSpeech = null;
     private static final int utteranceId = 42;
+
+
 
     public void initialize(Context appContext) {
         if (textToSpeech == null) {
@@ -26,6 +29,8 @@ public class TextToSpeechUtil {
     }
 
     public void speakNow(String utterance) {
+
+        Log.e("speakNow: ",  textToSpeech.toString());
         if (textToSpeech != null) {
             textToSpeech.speak(utterance, TextToSpeech.QUEUE_FLUSH,
                     null, "" + utteranceId);

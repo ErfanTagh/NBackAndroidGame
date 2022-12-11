@@ -9,14 +9,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class Splash extends AppCompatActivity {
+import se.kth.anderslm.ttt.utils.TextToSpeechUtil;
 
+public class Splash extends AppCompatActivity {
+    TextToSpeechUtil textToSpeechUtil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         Fragment fragment = new GameFragment();
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.fragment, fragment).commit();
